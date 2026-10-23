@@ -1,0 +1,26 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 🛡️ Isolated Student Notes: Each student can strictly only access, upload, and delete their own notes
+    match /students/{studentUid}/notes/{noteId} {
+      allow read, delete: if request.auth != null && request.auth.uid == studentUid;
+      allow create: if request.auth != null && request.auth.uid == studentUid
+                    && request.resource.data.ownerUid == studentUid;
+      allow update: if request.auth != null && request.auth.uid == studentUid
+                    && request.resource.data.ownerUid == studentUid;
+    }
+
+    // Top-level /notes collection fallback with owner isolation
+    match /notes/{noteId} {
+      allow read, delete: if request.auth != null && resource.data.ownerUid == request.auth.uid;
+      allow create: if request.auth != null && request.resource.data.ownerUid == request.auth.uid;
+      allow update: if request.auth != null && resource.data.ownerUid == request.auth.uid
+                    && request.resource.data.ownerUid == request.auth.uid;
+    }
+
+    // Default deny all other paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

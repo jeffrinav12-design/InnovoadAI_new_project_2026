@@ -1,0 +1,14 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // 🛡️ Student Notes Storage: Students can strictly read, upload, and delete their own files only
+    match /students/{studentUid}/notes/{allPaths=**} {
+      allow read, write, delete: if request.auth != null && request.auth.uid == studentUid;
+    }
+
+    // Default deny everything else
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

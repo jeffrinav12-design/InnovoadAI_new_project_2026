@@ -1,0 +1,6 @@
+{
+  "name": "INNOVOADAI",
+  "description": "INNOVOADAI - AI Powered Academic Intelligence Platform for Teaching, Learning, Assessment, and Academic Analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
